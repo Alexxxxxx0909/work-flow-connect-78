@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Menu, X, LayoutDashboard, Briefcase, MessageCircle, User, LogOut, Plus, Users, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Briefcase, MessageCircle, User, LogOut, Plus, Users, ChevronLeft, ChevronRight, BookmarkCheck } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface MainLayoutProps {
@@ -44,6 +44,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const navLinks = [
     { path: '/dashboard', label: 'Inicio', icon: <LayoutDashboard className="h-5 w-5" /> },
     { path: '/jobs', label: 'Propuestas', icon: <Briefcase className="h-5 w-5" /> },
+    { path: '/saved-jobs', label: 'Guardadas', icon: <BookmarkCheck className="h-5 w-5" /> },
     { path: '/chats', label: 'Mensajes', icon: <MessageCircle className="h-5 w-5" /> },
     { path: '/profile', label: 'Perfil', icon: <User className="h-5 w-5" /> },
   ];
@@ -120,73 +121,20 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                 `}
               >
                 <Plus className="h-5 w-5" />
-                {(!sidebarCollapsed || isMobile) && <span className="ml-3">Nueva propuesta</span>}
+                {(!sidebarCollapsed || isMobile) && <span className="ml-3">Crear Propuesta</span>}
               </Link>
             </nav>
           </div>
           
-          <div className={`p-4 flex items-center ${sidebarCollapsed && !isMobile ? 'justify-center' : 'justify-between'}`}>
-            {(!sidebarCollapsed || isMobile) ? (
-              <>
-                <div className="flex items-center flex-1">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="p-1.5 flex items-center space-x-2 w-full">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={currentUser?.photoURL} />
-                          <AvatarFallback className="bg-wfc-purple-medium text-white">
-                            {currentUser?.name?.charAt(0).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm font-medium truncate">{currentUser?.name}</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
-                      <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => navigate('/profile')}>
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Perfil</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleLogout}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        <span>Cerrar sesión</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <ThemeToggle />
-              </>
-            ) : (
-              <Avatar className="h-8 w-8 cursor-pointer" onClick={() => setSidebarCollapsed(false)}>
-                <AvatarImage src={currentUser?.photoURL} />
-                <AvatarFallback className="bg-wfc-purple-medium text-white">
-                  {currentUser?.name?.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            )}
-          </div>
-        </div>
-      </aside>
-      
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        {isMobile && (
-          <header className="bg-background border-b border-border p-4 flex items-center justify-between">
-            <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
-              <Menu className="h-5 w-5" />
-            </Button>
-            <Link to="/dashboard" className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-md bg-wfc-purple flex items-center justify-center">
-                <span className="text-white font-bold">WFC</span>
-              </div>
-            </Link>
-            <div className="flex items-center space-x-2">
+          <div className="p-4">
+            <div className="flex items-center justify-between">
               <ThemeToggle />
+              
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={currentUser?.photoURL} />
+                      <AvatarImage src={currentUser?.photoURL} alt={currentUser?.name} />
                       <AvatarFallback className="bg-wfc-purple-medium text-white">
                         {currentUser?.name?.charAt(0).toUpperCase()}
                       </AvatarFallback>
@@ -194,33 +142,70 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+                  <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate('/profile')}>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Perfil</span>
+                    <User className="h-4 w-4 mr-2" />
+                    Perfil
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Cerrar sesión</span>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Cerrar Sesión
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </header>
-        )}
-        
-        {isMobile && sidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-        
-        <main className={`flex-1 overflow-y-auto bg-background p-6 transition-all duration-300`}>
-          <div className="container-custom">
-            {children}
           </div>
+        </div>
+      </aside>
+      
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        <header className="py-2 px-4 border-b md:hidden">
+          <div className="flex items-center justify-between">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
+            
+            <Link to="/dashboard" className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-md bg-wfc-purple flex items-center justify-center">
+                <span className="text-white font-bold">WFC</span>
+              </div>
+              <span className="text-lg font-bold">WorkFlow Connect</span>
+            </Link>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={currentUser?.photoURL} alt={currentUser?.name} />
+                    <AvatarFallback className="bg-wfc-purple-medium text-white">
+                      {currentUser?.name?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate('/profile')}>
+                  <User className="h-4 w-4 mr-2" />
+                  Perfil
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Cerrar Sesión
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+        
+        <main className="flex-1 overflow-auto p-4">
+          {children}
         </main>
       </div>
     </div>

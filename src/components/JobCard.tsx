@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { Heart, MessageSquare } from 'lucide-react';
 
 type JobProps = {
   id: string;
@@ -17,6 +18,8 @@ type JobProps = {
   timestamp: number;
   status: 'open' | 'in-progress' | 'completed';
   comments: any[];
+  likedBy?: string[];
+  likesCount?: number;
 };
 
 export const JobCard = ({ job }: { job: JobProps }) => {
@@ -74,8 +77,15 @@ export const JobCard = ({ job }: { job: JobProps }) => {
               <div className="text-sm font-medium">
                 Presupuesto: ${job.budget}
               </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {job.comments.length} {job.comments.length === 1 ? 'comentario' : 'comentarios'}
+              <div className="flex space-x-3 text-xs text-muted-foreground mt-1">
+                <div className="flex items-center">
+                  <MessageSquare className="h-3 w-3 mr-1" />
+                  {job.comments.length}
+                </div>
+                <div className="flex items-center">
+                  <Heart className="h-3 w-3 mr-1" />
+                  {job.likesCount || 0}
+                </div>
               </div>
             </div>
             <Link to={`/jobs/${job.id}`}>

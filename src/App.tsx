@@ -32,6 +32,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ChatsPage from "./pages/ChatsPage";
 import UserProfile from "./pages/UserProfile";
 import CreateJobPage from "./pages/CreateJobPage";
+import SavedJobsPage from "./pages/SavedJobsPage";
 import NotFound from "./pages/NotFound";
 
 // Inicializar el cliente de React Query
@@ -102,6 +103,7 @@ const AppRoutes = () => {
       <Route path="/chats" element={<ProtectedRoute><ChatsPage /></ProtectedRoute>} />
       <Route path="/user/:userId" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
       <Route path="/create-job" element={<ProtectedRoute><CreateJobPage /></ProtectedRoute>} />
+      <Route path="/saved-jobs" element={<ProtectedRoute><SavedJobsPage /></ProtectedRoute>} />
       
       {/* Ruta 404 para manejar URLs no encontradas */}
       <Route path="*" element={<NotFound />} />
